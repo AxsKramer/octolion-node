@@ -10,7 +10,7 @@ const createProductSchema = {
   tags: productTagSchema
 };
 
-const uodateProductSchema = {
+const updateProductSchema = {
   name: Joi.string().max(50),
   price: Joi.number().min(1).max(1000000),
   image: Joi.string(),
@@ -22,5 +22,5 @@ module.exports = {
   productIdSchema,
   productTagSchema,
   createProductSchema,
-  uodateProductSchema
+  updateProductSchema
 }

@@ -1,0 +1,27 @@
+const passport = require('passport');
+const {Strategy, ExtractJwt } = require('passport-jwt');
+const boom = require('@hapi/boom');
+const config = require('../../../config');
+const MongoLib = require('../../../lib/mongo');
+
+passport.use(new Strategy({
+  secretOrKey: config.authJWTSecret,
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+},
+  async function(tokePayload, cb){
+    
+    const mongoDB = new MongoLib();
+
+    try {
+      
+      const [user] = await mongoDB.getAll("users", {username: tokePayload.sub});
+      
+      if(!user) return cb(boom.unauthorized(), false);
+      
+      return cb(null, user);
+
+    } catch (error) {
+      return cb(error);
+    }
+  })
+)
